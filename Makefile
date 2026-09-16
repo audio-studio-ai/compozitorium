@@ -10,7 +10,6 @@ run-web: ## Run dev (web)
 build: ## Create Linux .deb
 	@bun run tauri -- build --bundles deb
 
-
 build-windows: ## Create Windows NSIS (cargo-xwin on Linux/macOS)
 ifeq ($(OS),Windows_NT)
 	@bun run tauri -- build --target x86_64-pc-windows-msvc --bundles nsis
@@ -26,3 +25,27 @@ else
 	@command -v makensis >/dev/null || { echo "Нужно: sudo apt install nsis"; exit 1; }
 	@PATH="$$HOME/.local/bin:$$PATH" bun run tauri -- build --runner cargo-xwin --target x86_64-pc-windows-msvc --bundles nsis
 endif
+
+ANDROID_STUDIO := $(HOME)/.local/share/JetBrains/Toolbox/apps/android-studio
+
+build-android: ## Create Android APK
+	@export ANDROID_HOME="$${ANDROID_HOME:-$$HOME/Android/Sdk}"; ANDROID_HOME="$${ANDROID_HOME%/}"; export ANDROID_HOME; \
+	export JAVA_HOME="$(ANDROID_STUDIO)/jbr"; \
+	if [ ! -x "$$JAVA_HOME/bin/javac" ]; then echo "Нет JDK: $$JAVA_HOME"; exit 1; fi; \
+	if [ ! -d "$$ANDROID_HOME" ]; then echo "Нужно: Android SDK (ANDROID_HOME)"; exit 1; fi; \
+	if [ -z "$$NDK_HOME" ]; then export NDK_HOME="$$(ls -d $$ANDROID_HOME/ndk/* 2>/dev/null | tail -1)"; fi; \
+	if [ ! -d "$$NDK_HOME" ]; then echo "Нужно: NDK. Android Studio → SDK Manager → SDK Tools → NDK (Side by side)"; exit 1; fi; \
+	export PATH="$$JAVA_HOME/bin:$$PATH"; \
+	echo "JAVA_HOME=$$JAVA_HOME"; \
+	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android; \
+	test -d src-tauri/gen/android || bun run tauri -- android init --ci; \
+	bun run tauri -- android build --apk
+
+run-android: ## Run Android app on emulator
+	@export ANDROID_HOME="$${ANDROID_HOME:-$$HOME/Android/Sdk}"; ANDROID_HOME="$${ANDROID_HOME%/}"; export ANDROID_HOME; \
+	export JAVA_HOME="$(ANDROID_STUDIO)/jbr"; \
+	if [ ! -x "$$JAVA_HOME/bin/javac" ]; then echo "Нет JDK: $$JAVA_HOME"; exit 1; fi; \
+	if [ -z "$$NDK_HOME" ]; then export NDK_HOME="$$(ls -d $$ANDROID_HOME/ndk/* 2>/dev/null | tail -1)"; fi; \
+	export PATH="$$JAVA_HOME/bin:$$ANDROID_HOME/platform-tools:$$ANDROID_HOME/emulator:$$PATH"; \
+	adb get-state >/dev/null 2>&1 || { emulator -avd Pixel_9 >/dev/null 2>&1 & adb wait-for-device; }; \
+	bun run tauri -- android run
