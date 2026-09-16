@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>io.github.compozitorium.app</id>
+  <id>io.github.compozitorium.studio</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
   <name>Compozitorium AI Studio</name>
@@ -10,7 +10,7 @@
     <p>Compozitorium AI Studio is a desktop application for audio processing powered by artificial intelligence.</p>
     <p>It supports recording, editing, noise reduction, and export to popular formats.</p>
   </description>
-  <icon type="stock">io.github.compozitorium.app</icon>
+  <icon type="stock">io.github.compozitorium.studio</icon>
   <launchable type="desktop-id">compozitorium-ai-studio.desktop</launchable>
   <url type="homepage">https://github.com/audio-studio-ai/compozitorium</url>
   <developer id="io.github.compozitorium">
@@ -21,7 +21,7 @@
     <category>Audio</category>
   </categories>
   <provides>
-    <binary>io.github.compozitorium.app</binary>
+    <binary>io.github.compozitorium.studio</binary>
     <id>compozitorium-ai-studio.desktop</id>
   </provides>
   <content_rating type="oars-1.1"/>

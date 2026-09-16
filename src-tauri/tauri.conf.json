@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Compozitorium AI Studio",
   "version": "0.1.0",
-  "identifier": "io.github.compozitorium.app",
+  "identifier": "io.github.compozitorium.studio",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:3000",
@@ -53,7 +53,7 @@
       "deb": {
         "section": "sound",
         "files": {
-          "/usr/share/metainfo/io.github.compozitorium.app.metainfo.xml": "./io.github.compozitorium.app.metainfo.xml"
+          "/usr/share/metainfo/io.github.compozitorium.studio.metainfo.xml": "./io.github.compozitorium.studio.metainfo.xml"
         }
       }
     }
