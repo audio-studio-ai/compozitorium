@@ -7,8 +7,18 @@ run: ## Rnn dev (gui)
 run-web: ## Run dev (web)
 	@bun run dev
 
+RELEASE := release
+NAME := compozitorium
+TARGET := $(if $(CARGO_TARGET_DIR),$(CARGO_TARGET_DIR),src-tauri/target)
+VERSION := $(shell sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' src-tauri/tauri.conf.json | head -1 | tr -d .)
+
+# Готовые пакеты складываются в $(RELEASE)/ как $(NAME)_$(VERSION)_<платформа>.<ext>
+collect = @mkdir -p $(RELEASE) && for f in $(1); do cp -f "$$f" "$(RELEASE)/$(NAME)_$(VERSION)_$(2).$${f\#\#*.}"; done && ls -1sh $(RELEASE)
+
 build: ## Create Linux .deb
+	@python3 src-tauri/linux/wrap-catalog.py
 	@bun run tauri -- build --bundles deb
+	$(call collect,$(TARGET)/release/bundle/deb/*.deb,x64)
 
 build-windows: ## Create Windows NSIS (cargo-xwin on Linux/macOS)
 ifeq ($(OS),Windows_NT)
@@ -25,6 +35,7 @@ else
 	@command -v makensis >/dev/null || { echo "Нужно: sudo apt install nsis"; exit 1; }
 	@PATH="$$HOME/.local/bin:$$PATH" bun run tauri -- build --runner cargo-xwin --target x86_64-pc-windows-msvc --bundles nsis
 endif
+	$(call collect,$(TARGET)/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe,x64)
 
 ANDROID_STUDIO := $(HOME)/.local/share/JetBrains/Toolbox/apps/android-studio
 
@@ -40,6 +51,7 @@ build-android: ## Create Android APK
 	rustup target add aarch64-linux-android armv7-linux-androideabi i686-linux-android x86_64-linux-android; \
 	test -d src-tauri/gen/android || bun run tauri -- android init --ci; \
 	bun run tauri -- android build --apk
+	$(call collect,src-tauri/gen/android/app/build/outputs/apk/universal/release/*.apk,android)
 
 run-android: ## Run Android app on emulator
 	@export ANDROID_HOME="$${ANDROID_HOME:-$$HOME/Android/Sdk}"; ANDROID_HOME="$${ANDROID_HOME%/}"; export ANDROID_HOME; \

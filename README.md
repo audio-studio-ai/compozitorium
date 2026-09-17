@@ -2,6 +2,8 @@
 
 Десктоп-приложение на Tauri 2 + React. Нужны [Bun](https://bun.sh) и [Rust](https://rustup.rs).
 
+![Экран приветствия](docs/img/welcome.png)
+
 ## Запуск
 
 ```shell
@@ -16,13 +18,16 @@ make run-web
 
 ## Сборка
 
+Готовые пакеты всех платформ копируются в `release/` в корне проекта по маске
+`compozitorium_<версия без точек>_<платформа>.<расширение>` (версия берётся из `src-tauri/tauri.conf.json`).
+
 ### Linux
 
 ```shell
 make build
 ```
 
-Пакет: `src-tauri/target/release/bundle/deb/compozitorium-ai-studio_*.deb`
+Пакет: `release/compozitorium_010_x64.deb`
 
 ### Windows
 
@@ -33,7 +38,7 @@ sudo apt install llvm lld nsis clang
 make build-windows
 ```
 
-Инсталлятор: `src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/`
+Инсталлятор: `release/compozitorium_010_x64.exe`
 
 На самой Windows достаточно `make build-windows` (без xwin).
 
@@ -49,7 +54,7 @@ make build-android
 make run-android
 ```
 
-APK: `src-tauri/gen/android/app/build/outputs/apk/`
+APK: `release/compozitorium_010_android.apk` (unsigned, все ABI)
 
 `run-android` поднимает Pixel_9, если `adb` ещё не видит устройство.
 
