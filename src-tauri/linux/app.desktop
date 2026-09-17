@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Compozitorium AI Studio
+GenericName=Audio Editor
+GenericName[ru]=Аудиоредактор
+Comment={{comment}}
+Comment[ru]=Умный аудиоредактор с искусственным интеллектом
+Exec={{exec}}
+Icon={{icon}}
+StartupWMClass=io.github.compozitorium.studio
+Terminal=false
+StartupNotify=true
+NoDisplay=true
+Categories={{categories}}
+Keywords=audio;AI;editor;studio;music;аудио;ИИ;редактор;студия;

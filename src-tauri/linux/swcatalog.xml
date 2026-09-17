@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components version="0.16" origin="compozitorium">
+<component type="desktop-application">
+  <id>io.github.compozitorium.studio</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <name>Compozitorium AI Studio</name>
+  <summary>Smart audio editor with AI</summary>
+  <pkgname>compozitorium-ai-studio</pkgname>
+  <description>
+    <p>Compozitorium AI Studio is a desktop app for recording, editing and generating audio with AI.</p>
+    <p>Dictate, synthesize speech and music, then assemble the result on a timeline and export to common formats.</p>
+    <ul>
+      <li>Recording and dictation</li>
+      <li>Speech and music generation</li>
+      <li>Timeline editor and mixer</li>
+    </ul>
+  </description>
+  <icon type="stock">io.github.compozitorium.studio</icon>
+  <icon type="cached" width="64" height="64">io.github.compozitorium.studio.png</icon>
+  <icon type="cached" width="128" height="128">io.github.compozitorium.studio.png</icon>
+  <launchable type="desktop-id">io.github.compozitorium.studio.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image type="source" width="887" height="499">https://raw.githubusercontent.com/audio-studio-ai/compozitorium/main/docs/img/welcome.png</image>
+      <caption>Welcome screen</caption>
+      <caption xml:lang="ru">Экран приветствия</caption>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/audio-studio-ai/compozitorium</url>
+  <developer id="io.github.compozitorium">
+    <name>@z-ev</name>
+  </developer>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+    <category>Recorder</category>
+  </categories>
+  <keywords>
+    <keyword>audio</keyword>
+    <keyword>editor</keyword>
+    <keyword>AI</keyword>
+    <keyword>studio</keyword>
+    <keyword>music</keyword>
+  </keywords>
+  <provides>
+    <binary>io.github.compozitorium.studio</binary>
+  </provides>
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </supports>
+  <branding>
+    <color type="primary" scheme_preference="dark">#0a0a12</color>
+    <color type="primary" scheme_preference="light">#1a1a24</color>
+  </branding>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="0.1.0" date="2026-09-16">
+      <description>
+        <p>Initial release.</p>
+      </description>
+    </release>
+  </releases>
+</component>
+</components>

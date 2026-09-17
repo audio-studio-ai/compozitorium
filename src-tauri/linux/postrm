@@ -1,0 +1,16 @@
+#!/bin/sh
+set -e
+if [ "$1" = remove ] || [ "$1" = purge ]; then
+  getent passwd | while IFS=: read -r user _ uid _ _ home _; do
+    [ "$uid" -ge 1000 ] && [ "$uid" -lt 60000 ] || continue
+    [ -d "$home" ] || continue
+
+    desk=$(sed -n 's/^XDG_DESKTOP_DIR="\(.*\)"$/\1/p' "$home/.config/user-dirs.dirs" 2>/dev/null | tail -1)
+    desk=$(printf '%s' "$desk" | sed "s|^\$HOME|$home|")
+    [ -n "$desk" ] && [ -d "$desk" ] || desk="$home/Desktop"
+
+    rm -f "$desk/io.github.compozitorium.studio.desktop"
+  done
+  command -v appstreamcli >/dev/null 2>&1 && appstreamcli refresh --force >/dev/null 2>&1 || true
+fi
+exit 0

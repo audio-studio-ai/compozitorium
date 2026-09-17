@@ -1,0 +1,29 @@
+#!/bin/sh
+set -e
+
+command -v gtk-update-icon-cache >/dev/null 2>&1 && gtk-update-icon-cache -f /usr/share/icons/hicolor >/dev/null 2>&1 || true
+command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database -q /usr/share/applications >/dev/null 2>&1 || true
+command -v appstreamcli >/dev/null 2>&1 && appstreamcli refresh --force >/dev/null 2>&1 || true
+
+src=/usr/share/applications/io.github.compozitorium.studio.desktop
+[ -f "$src" ] || exit 0
+
+# Ярлык кладём всем обычным пользователям: при установке из центра приложений
+# ни SUDO_USER, ни PKEXEC_UID не выставлены
+getent passwd | while IFS=: read -r user _ uid _ _ home _; do
+  [ "$uid" -ge 1000 ] && [ "$uid" -lt 60000 ] || continue
+  [ -d "$home" ] || continue
+
+  desk=$(sed -n 's/^XDG_DESKTOP_DIR="\(.*\)"$/\1/p' "$home/.config/user-dirs.dirs" 2>/dev/null | tail -1)
+  desk=$(printf '%s' "$desk" | sed "s|^\$HOME|$home|")
+  [ -n "$desk" ] && [ -d "$desk" ] || desk="$home/Desktop"
+  [ -d "$desk" ] || continue
+
+  dest="$desk/io.github.compozitorium.studio.desktop"
+  cp -f "$src" "$dest"
+  chmod 755 "$dest"
+  chown "$user:" "$dest"
+  # GNOME запускает ярлык с рабочего стола только помеченный доверенным
+  su -s /bin/sh -c "HOME='$home' gio set '$dest' metadata::trusted true" "$user" >/dev/null 2>&1 || true
+done
+exit 0
