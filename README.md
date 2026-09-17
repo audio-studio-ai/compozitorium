@@ -60,4 +60,17 @@ APK: `release/compozitorium_010_android.apk` (unsigned, все ABI)
 
 ### macOS
 
-Пока не собирается.
+Только на самой macOS (13+): бандл `.app`/`.dmg` собирается через Xcode Command Line Tools,
+кросс-сборка с Linux невозможна.
+
+```shell
+xcode-select --install
+make build-macos
+make run-macos
+```
+
+Образ: `release/compozitorium_010_macos.dmg` — universal (Apple Silicon + Intel).
+`run-macos` открывает уже собранный `.app` из `src-tauri/target/universal-apple-darwin/release/bundle/macos/`.
+
+Сборка без подписи Developer ID, поэтому на другом маке после скачивания образа
+Gatekeeper его заблокирует: `xattr -dr com.apple.quarantine /Applications/Compozitorium\ AI\ Studio.app`.

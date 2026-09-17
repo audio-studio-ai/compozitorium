@@ -37,6 +37,21 @@ else
 endif
 	$(call collect,$(TARGET)/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe,x64)
 
+MACOS_TARGET := universal-apple-darwin
+MACOS_BUNDLE := $(TARGET)/$(MACOS_TARGET)/release/bundle
+
+build-macos: ## Create macOS .dmg (universal)
+	@test "$$(uname)" = Darwin || { echo "Нужен macOS: кросс-сборка .app/.dmg не поддерживается"; exit 1; }
+	@xcode-select -p >/dev/null 2>&1 || { echo "Нужно: xcode-select --install"; exit 1; }
+	@rustup target add aarch64-apple-darwin x86_64-apple-darwin
+	@bun run tauri -- build --target $(MACOS_TARGET) --bundles dmg
+	$(call collect,$(MACOS_BUNDLE)/dmg/*.dmg,macos)
+
+run-macos: ## Run built macOS app
+	@app="$$(ls -d $(MACOS_BUNDLE)/macos/*.app 2>/dev/null | head -1)"; \
+	if [ -z "$$app" ]; then echo "Сначала: make build-macos"; exit 1; fi; \
+	open "$$app"
+
 ANDROID_STUDIO := $(HOME)/.local/share/JetBrains/Toolbox/apps/android-studio
 
 build-android: ## Create Android APK
